@@ -44,12 +44,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity updateUserStatus(UpdateStatusRequest request) {
-        Optional<UserEntity> optionalUserEntity = userRepository.findById(request.getUserId());
+    public UserEntity updateUserStatus(Long userId, String status) {
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
         if (optionalUserEntity.isPresent()) {
             UserEntity userEntity = optionalUserEntity.get();
 
-            String userStatus = request.getStatus().toUpperCase();
+            String userStatus = status.toUpperCase();
             if (!validateStatus(userStatus)) {
                 return null;
             }

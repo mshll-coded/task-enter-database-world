@@ -37,9 +37,9 @@ public class AppController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/updateStatus")
-    public ResponseEntity<UserResponse> updateUserStatus(@RequestBody UpdateStatusRequest request) {
-        UserEntity userEntity = userService.updateUserStatus(request);
+    @PutMapping("/updateStatus")
+    public ResponseEntity<UserResponse> updateUserStatus(@RequestParam Long userId, @RequestParam String status) {
+        UserEntity userEntity = userService.updateUserStatus(userId, status);
 
         if (userEntity == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -48,4 +48,5 @@ public class AppController {
         UserResponse response = new UserResponse(userEntity);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 }

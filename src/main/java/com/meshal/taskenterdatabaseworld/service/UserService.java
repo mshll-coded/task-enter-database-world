@@ -12,5 +12,5 @@ public interface UserService {
 
     UserEntity createUser(CreateUserRequest request);
 
-    UserEntity updateUserStatus(UpdateStatusRequest request);
+    UserEntity updateUserStatus(Long userId, String status);
 }
