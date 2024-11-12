@@ -59,9 +59,9 @@ public class AppController {
     }
 
     @GetMapping("/searchUsers")
-    public ResponseEntity<List<UserEntity>> searchUsers(@RequestParam String status) {
+    public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String status) {
         try {
-            List<UserEntity> filteredUsers = userService.searchUsersByStatus(status);
+            List<UserResponse> filteredUsers = userService.searchUsersByStatus(status);
 
             return ResponseEntity.status(HttpStatus.OK).body(filteredUsers);
 

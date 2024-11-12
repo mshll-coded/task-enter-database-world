@@ -1,6 +1,7 @@
 package com.meshal.taskenterdatabaseworld.service;
 
 import com.meshal.taskenterdatabaseworld.bo.CreateUserRequest;
+import com.meshal.taskenterdatabaseworld.bo.UserResponse;
 import com.meshal.taskenterdatabaseworld.entity.UserEntity;
 import com.meshal.taskenterdatabaseworld.enums.Status;
 import com.meshal.taskenterdatabaseworld.repository.UserRepository;
@@ -49,11 +50,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserEntity> searchUsersByStatus(String status) {
-        List<UserEntity> userEntities = new ArrayList<>();
+    public List<UserResponse> searchUsersByStatus(String status) {
+        List<UserResponse> userEntities = new ArrayList<>();
         for (UserEntity userEntity : userRepository.findAll()) {
             if (userEntity.getStatus() == Status.valueOf(status.toUpperCase())) {
-                userEntities.add(userEntity);
+                userEntities.add(new UserResponse(userEntity));
             }
         }
         return userEntities;
