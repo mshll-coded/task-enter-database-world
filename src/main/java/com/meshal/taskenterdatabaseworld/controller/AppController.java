@@ -1,7 +1,6 @@
 package com.meshal.taskenterdatabaseworld.controller;
 
 import com.meshal.taskenterdatabaseworld.bo.CreateUserRequest;
-import com.meshal.taskenterdatabaseworld.bo.UpdateStatusRequest;
 import com.meshal.taskenterdatabaseworld.bo.UserResponse;
 import com.meshal.taskenterdatabaseworld.entity.UserEntity;
 import com.meshal.taskenterdatabaseworld.service.UserService;
@@ -27,26 +26,48 @@ public class AppController {
 
     @PostMapping("/create")
     public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
-        UserEntity userEntity = userService.createUser(request);
+        try {
+            UserEntity userEntity = userService.createUser(request);
 
-        if (userEntity == null) {
+            if (userEntity == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
+            UserResponse response = new UserResponse(userEntity);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-
-        UserResponse response = new UserResponse(userEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/updateStatus")
     public ResponseEntity<UserResponse> updateUserStatus(@RequestParam Long userId, @RequestParam String status) {
-        UserEntity userEntity = userService.updateUserStatus(userId, status);
+        try {
+            UserEntity userEntity = userService.updateUserStatus(userId, status);
 
-        if (userEntity == null) {
+            if (userEntity == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
+            UserResponse response = new UserResponse(userEntity);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        UserResponse response = new UserResponse(userEntity);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/searchUsers")
+    public ResponseEntity<List<UserEntity>> searchUsers(@RequestParam String status) {
+        try {
+            List<UserEntity> filteredUsers = userService.searchUsersByStatus(status);
+
+            return ResponseEntity.status(HttpStatus.OK).body(filteredUsers);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
 }

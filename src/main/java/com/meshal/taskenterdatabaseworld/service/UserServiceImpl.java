@@ -1,15 +1,12 @@
 package com.meshal.taskenterdatabaseworld.service;
 
 import com.meshal.taskenterdatabaseworld.bo.CreateUserRequest;
-import com.meshal.taskenterdatabaseworld.bo.UpdateStatusRequest;
-import com.meshal.taskenterdatabaseworld.bo.UserResponse;
 import com.meshal.taskenterdatabaseworld.entity.UserEntity;
 import com.meshal.taskenterdatabaseworld.enums.Status;
 import com.meshal.taskenterdatabaseworld.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.util.EnumUtils;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +30,6 @@ public class UserServiceImpl implements UserService {
         }
 
         String userStatus = request.getStatus() != null ? request.getStatus().toUpperCase() : "ACTIVE";
-        if (!validateStatus(userStatus)) {
-            return null;
-        }
-
         UserEntity userEntity = new UserEntity();
         userEntity.setName(request.getName());
         userEntity.setStatus(Status.valueOf(userStatus));
@@ -49,23 +42,21 @@ public class UserServiceImpl implements UserService {
         if (optionalUserEntity.isPresent()) {
             UserEntity userEntity = optionalUserEntity.get();
 
-            String userStatus = status.toUpperCase();
-            if (!validateStatus(userStatus)) {
-                return null;
-            }
-
-            userEntity.setStatus(Status.valueOf(userStatus));
+            userEntity.setStatus(Status.valueOf(status.toUpperCase()));
             return userRepository.save(userEntity);
         }
         return null;
     }
 
-    public static boolean validateStatus(String status) {
-        for (Status s : Status.values()) {
-            if (s.name().equals(status.toUpperCase())) {
-                return true;
+    @Override
+    public List<UserEntity> searchUsersByStatus(String status) {
+        List<UserEntity> userEntities = new ArrayList<>();
+        for (UserEntity userEntity : userRepository.findAll()) {
+            if (userEntity.getStatus() == Status.valueOf(status.toUpperCase())) {
+                userEntities.add(userEntity);
             }
         }
-        return false;
+        return userEntities;
     }
+
 }
